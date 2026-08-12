@@ -1,0 +1,9 @@
+{
+  "name": "Jewelry Vault",
+  "short_name": "Jewelry",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f1ea",
+  "theme_color": "#171310",
+  "icons": []
+}

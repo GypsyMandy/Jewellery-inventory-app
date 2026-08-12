@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171310" />
+  <title>Jewelry Vault</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">PRIVATE COLLECTION</p>
+      <h1>Jewelry Vault</h1>
+    </div>
+    <button id="newItemBtn" class="primary compact">＋ Add piece</button>
+  </header>
+
+  <main>
+    <section id="setupPanel" class="panel hidden">
+      <p class="eyebrow">ONE-TIME SETUP</p>
+      <h2>Connect secure storage</h2>
+      <p>Paste your Supabase project URL and publishable key.</p>
+      <div class="two-col">
+        <label>Supabase URL<input id="supabaseUrl" type="url" placeholder="https://xxxxx.supabase.co"></label>
+        <label>Publishable key<input id="supabaseKey" type="password" placeholder="sb_publishable_..."></label>
+      </div>
+      <div class="button-row">
+        <button id="saveConfigBtn" class="primary">Save connection</button>
+        <button id="demoModeBtn" class="secondary">Use demo mode</button>
+      </div>
+    </section>
+
+    <section id="authPanel" class="panel hidden">
+      <p class="eyebrow">SIGN IN</p>
+      <h2>Your private inventory</h2>
+      <div class="two-col">
+        <label>Email<input id="emailInput" type="email"></label>
+        <label>Password<input id="passwordInput" type="password"></label>
+      </div>
+      <div class="button-row">
+        <button id="signInBtn" class="primary">Sign in</button>
+        <button id="signUpBtn" class="secondary">Create account</button>
+      </div>
+    </section>
+
+    <section id="appPanel" class="hidden">
+      <section class="stats-grid">
+        <article><span id="totalCount">0</span><small>Total pieces</small></article>
+        <article><span id="photoMissingCount">0</span><small>Need photos</small></article>
+        <article><span id="listedCount">0</span><small>Listed</small></article>
+        <article><span id="soldCount">0</span><small>Sold</small></article>
+      </section>
+
+      <nav id="categoryTabs" class="category-tabs">
+        <button class="tab active" data-category="">All</button>
+        <button class="tab" data-category="N">N · Necklaces</button>
+        <button class="tab" data-category="C">C · Chains</button>
+        <button class="tab" data-category="B">B · Bracelets</button>
+        <button class="tab" data-category="E">E · Earrings</button>
+        <button class="tab" data-category="P">P · Pendants</button>
+        <button class="tab" data-category="R">R · Rings</button>
+        <button class="tab" data-category="W">W · Watches</button>
+      </nav>
+
+      <section class="toolbar">
+        <input id="searchInput" type="search" placeholder="Search code, designer, stone...">
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option>Needs photos</option>
+          <option>Ready to list</option>
+          <option>Listed</option>
+          <option>Consigned</option>
+          <option>Sold</option>
+        </select>
+        <button id="exportBtn" class="secondary compact">Export CSV</button>
+        <button id="settingsBtn" class="ghost compact">⚙</button>
+        <button id="signOutBtn" class="ghost compact">Sign out</button>
+      </section>
+
+      <section id="emptyState" class="empty-state hidden">
+        <div class="gem">◇</div>
+        <h2>No pieces here yet</h2>
+        <p>Add your first item to this category.</p>
+        <button id="emptyAddBtn" class="primary">Add piece</button>
+      </section>
+
+      <section id="itemGrid" class="item-grid"></section>
+    </section>
+  </main>
+
+  <dialog id="itemDialog">
+    <form id="itemForm">
+      <div class="dialog-header">
+        <div><p class="eyebrow">JEWELRY RECORD</p><h2 id="dialogTitle">Add piece</h2></div>
+        <button type="button" id="closeDialogBtn" class="ghost icon-btn">×</button>
+      </div>
+
+      <input id="itemId" type="hidden">
+
+      <div class="form-grid">
+        <label>Category
+          <select id="categoryCode" required>
+            <option value="N">N · Necklace</option>
+            <option value="C">C · Chain</option>
+            <option value="B">B · Bracelet</option>
+            <option value="E">E · Earrings</option>
+            <option value="P">P · Pendant</option>
+            <option value="R">R · Ring</option>
+            <option value="W">W · Watch</option>
+          </select>
+        </label>
+
+        <label>Inventory number<input id="inventoryNumber" type="number" min="1" required></label>
+        <label>Inventory code<input id="inventoryCode" readonly></label>
+        <label>Status
+          <select id="status">
+            <option>Needs photos</option>
+            <option>Ready to list</option>
+            <option>Listed</option>
+            <option>Consigned</option>
+            <option>Sold</option>
+          </select>
+        </label>
+
+        <label class="full-width">Description
+          <textarea id="description" rows="3" required placeholder="Example: Vintage cable-link necklace with toggle clasp"></textarea>
+        </label>
+
+        <label>Designer / maker<input id="designer" placeholder="David Yurman, Lagos, Tiffany & Co., unknown..."></label>
+        <label>Material<input id="material" placeholder="925 silver, 14K yellow gold, 750 gold..."></label>
+        <label>Stone, if any<input id="stones" placeholder="Citrine, ruby, blue topaz, none..."></label>
+        <label>Length<input id="length" placeholder='Example: 18 inches'></label>
+        <label>Width<input id="width" placeholder='Example: 0.5 inch'></label>
+        <label>Weight (grams)<input id="weightGrams" type="number" step="0.01" min="0"></label>
+        <label>Hallmark / stamp<input id="hallmarks" placeholder="925, 750, maker mark..."></label>
+        <label>Price ($)<input id="price" type="number" step="0.01" min="0"></label>
+
+        <label>Condition (optional)
+          <select id="condition">
+            <option value=""></option>
+            <option>New</option>
+            <option>Like New</option>
+            <option>Excellent</option>
+            <option>Very Good</option>
+            <option>Good</option>
+            <option>Fair</option>
+            <option>Needs Repair</option>
+          </select>
+        </label>
+        <label>Storage location<input id="storageLocation"></label>
+        <label>Listing platform<input id="listingPlatform"></label>
+        <label>Listing URL<input id="listingUrl" type="url"></label>
+      </div>
+
+      <label>Special notes<textarea id="notes" rows="3" placeholder="Provenance, unusual construction, repairs, matching pieces, damage, authenticity notes..."></textarea></label>
+
+      <section class="photo-section">
+        <h3>Photos</h3>
+        <label class="photo-picker">
+          <input id="photoInput" type="file" accept="image/*" capture="environment" multiple>
+          📷 Take or choose photos
+        </label>
+        <div id="photoPreview" class="photo-preview"></div>
+      </section>
+
+      <section class="listing-copy">
+        <div class="section-title">
+          <div><h3>Listing copy</h3><p>Create one master listing description.</p></div>
+          <button id="generateListingBtn" type="button" class="secondary compact">Generate draft</button>
+        </div>
+        <label>Listing title<input id="listingTitle" maxlength="140"></label>
+        <label>Description<textarea id="listingDescription" rows="7"></textarea></label>
+        <label>Keywords<input id="keywords"></label>
+      </section>
+
+      <div class="dialog-actions">
+        <button id="deleteBtn" type="button" class="danger hidden">Delete</button>
+        <span class="spacer"></span>
+        <button type="button" id="cancelBtn" class="secondary">Cancel</button>
+        <button type="submit" class="primary">Save piece</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
