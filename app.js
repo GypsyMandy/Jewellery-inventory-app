@@ -1,6 +1,6 @@
 
 const $=id=>document.getElementById(id);
-const CONFIG_KEY="jewelry-vault-config",DEMO_KEY="jewelry-vault-demo-items";
+const CONFIG_KEY="jewelry-vault-config2",DEMO_KEY="jewelry-vault-demo-items";
 let client=null,user=null,items=[],pendingFiles=[],existingPhotos=[],demoMode=false,activeCategory="";
 const categoryNames={N:"Necklace",C:"Chain",B:"Bracelet",E:"Earrings",P:"Pendant",R:"Ring",W:"Watch"};
 const fieldMap={
