@@ -48,7 +48,7 @@ function render(){
     const photo=i.photos?.[0]?.url;
     card.innerHTML=`<div class="item-photo">${photo?`<img src="${esc(photo)}">`:`<span class="placeholder-gem">◇</span>`}</div>
     <div class="card-body"><div class="card-top"><span class="code">${esc(i.inventory_code)}</span><span class="badge">${esc(i.status||"")}</span></div>
-    <h3>${esc(i.designer||categoryNames[i.category_code])}</h3>
+    <h3>${esc(i.description)}</h3>
     <div class="meta">${esc([i.material,i.stones,i.weight_grams?i.weight_grams+" g":""].filter(Boolean).join(" · "))}</div>
     ${i.price?`<div class="price">$${Number(i.price).toLocaleString()}</div>`:""}</div>`;
     card.onclick=()=>openItem(i);
