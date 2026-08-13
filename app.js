@@ -1,6 +1,10 @@
 
 const $=id=>document.getElementById(id);
 const CONFIG_KEY="jewelry-vault-config2",DEMO_KEY="jewelry-vault-demo-items";
+const DEFAULT_CONFIG = {
+  url:"https://vtohbhfrfmnbddutusak.supabase.co",
+  key:"sb_publishable_xoIuaDn_mGCc_tcvlWRoFA_hFmTS7u4"
+};
 let client=null,user=null,items=[],pendingFiles=[],existingPhotos=[],demoMode=false,activeCategory="";
 const categoryNames={N:"Necklace",C:"Chain",B:"Bracelet",E:"Earrings",P:"Pendant",R:"Ring",W:"Watch"};
 const fieldMap={
@@ -11,7 +15,7 @@ const fieldMap={
 const fields=["description","designer","status","material","stones","length","width","weightGrams","hallmarks","price","condition","storageLocation","listingPlatform","listingUrl","notes","listingTitle","listingDescription","keywords"];
 
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
-function getConfig(){try{return JSON.parse(localStorage.getItem(CONFIG_KEY)||"null")}catch{return null}}
+function getConfig(){try{return JSON.parse(localStorage.getItem(CONFIG_KEY)||JSON.stringify(DEFAULT_CONFIG)}catch{return null}}
 function show(id){["setupPanel","authPanel","appPanel"].forEach(x=>$(x).classList.add("hidden"));$(id).classList.remove("hidden")}
 function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function nextNumber(code){return Math.max(0,...items.filter(i=>i.category_code===code).map(i=>Number(i.inventory_number)||0))+1}
